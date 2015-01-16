@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<!DOCTYPE bulletml SYSTEM "bulletml.dtd">
+<bulletml>
+
+	<action label="top">
+		<repeat>
+			<times>6</times>
+			<action>
+        <repeat>
+          <!-- 每次发射弹幕个数 -->
+          <times>15</times>
+          <action>
+            <fire>
+              <!-- 每个子弹之间间隔的角度 -->
+              <direction type="sequence">24</direction>
+              <speed>1</speed>
+              <!-- 使用的子弹名称 根据名称会去找BulletBank里面的prefab -->
+              <bullet label="Bullet1_0">
+              </bullet>
+            </fire>
+          </action>
+        </repeat>
+        <wait>10</wait>
+			</action>
+		</repeat>
+	</action>
+	
+</bulletml>

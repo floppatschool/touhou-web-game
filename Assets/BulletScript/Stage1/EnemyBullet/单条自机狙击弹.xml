@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<!DOCTYPE bulletml SYSTEM "bulletml.dtd">
+<bulletml>
+
+  <action label="top">
+    <action>
+      <repeat>
+        <!-- 发射次数 -->
+        <times>10</times>
+        <action>
+          <fire>
+            <!-- 自机狙击 -->
+            <direction type="aim">0</direction>
+            <speed>0.13</speed>
+            <!-- 使用的子弹名称 根据名称会去找BulletBank里面的prefab -->
+            <bullet label="圆弹白">
+            </bullet>
+          </fire>
+          <!-- 发射间隔 -->
+          <wait>4</wait>
+        </action>
+      </repeat>
+    </action>
+  </action>
+
+
+</bulletml>

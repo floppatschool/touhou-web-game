@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<!DOCTYPE bulletml SYSTEM "bulletml.dtd">
+<bulletml type="vertical" xmlns="http://www.asahi-net.or.jp/~cs8k-cyu/bulletml">
+
+  <action label="top">
+    <repeat>
+      <!--重复次数-->
+      <times>4</times>
+      <action>
+        <repeat>
+          <!--每次单方向发射的弹幕数-->
+          <times>5</times>
+          <actionRef label="MulDir"></actionRef>  
+        </repeat>
+        <wait>10</wait>
+      </action>
+    </repeat>
+  </action>
+
+  <!--多方向行为-->
+  <action label="MulDir">
+      <wait>3</wait>
+      <repeat>
+        <!--方向数-->
+        <times>15</times>
+        <action>
+          <fireRef label="brustsFire"></fireRef>
+        </action>
+      </repeat>
+  </action>
+  
+  <!--每次单方向发射的子弹属性-->
+  <fire label="brustsFire">
+    <direction type="sequence">30</direction>
+    <speed>1</speed>
+    <bullet/>
+  </fire>
+</bulletml>
