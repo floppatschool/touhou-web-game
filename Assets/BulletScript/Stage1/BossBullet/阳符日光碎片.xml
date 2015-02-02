@@ -8,45 +8,21 @@
     <repeat>
       <!-- The main loop, until the boss is destroyed -->
       <times>99999</times>
-      <actionRef label="Big_shot"></actionRef>
       <!--<action>
-        <repeat>
-          <times>4</times>
-          <action>
-            <fire>
-              --><!-- 开始最大的一发 --><!--
-              <direction type="sequence">90</direction>
-              <bulletRef label="Bullet21_0"/>
-            </fire>
-          </action>
-        </repeat>
-        
-        <wait>30 - (15 * $rank)</wait>
+        <fire>
+          <direction type="sequence">10</direction>
+          <bulletRef label="allInOne"></bulletRef>
+        </fire>
       </action>-->
+
+      <action>
+        <actionRef label="Big_shot"></actionRef>
+      </action>
     </repeat>
   </action>
   
-  
-  
-  <bullet label="Bullet21_0">
-    <speed>0.25 + 0.25 * $rank</speed>
-    <action>
-      <wait>30 * (2.0 - 1.0 * $rank)</wait>
-      <actionRef label="frag_shot">
-        <param>0</param>
-      </actionRef>
-      <!--<actionRef label="frag_shot">
-        <param>90</param>
-      </actionRef>-->
-      <!--<actionRef label="frag_shot">
-        <param>180</param>
-      </actionRef>
-      <actionRef label="frag_shot">
-        <param>270</param>
-      </actionRef>-->
-
-      <vanish />
-    </action>
+  <bullet label="allInOne">
+    <actionRef label="Big_shot"></actionRef>
   </bullet>
 
   <action label="Big_shot">
@@ -58,12 +34,19 @@
           <direction type="sequence">90</direction>
           <bulletRef label="Bullet21_0"/>
         </fire>
+        <fire>
+          <!-- 开始最大的一发 偏移10个角度 -->
+          <direction type="sequence">90</direction>
+          <offSet>10</offSet>
+          <bulletRef label="Bullet21_0"/>
+        </fire>
       </action>
     </repeat>
-
-    <wait>30 - (15 * $rank)</wait>
+    <wait>30</wait>
   </action>
+
   
+
   <action label="frag_shot">
     <fire>
       <direction type="absolute">360 * $rand</direction>
@@ -90,6 +73,17 @@
         <bullet label="boss3_shot_3"/>
       </fire>
       <vanish />-->
+    </action>
+  </bullet>
+
+  <bullet label="Bullet21_0">
+    <speed>0.25 + 0.25 * $rank</speed>
+    <action>
+      <wait>30 * (2.0 - 1.0 * $rank)</wait>
+      <actionRef label="frag_shot">
+        <param>0</param>
+      </actionRef>
+      <vanish />
     </action>
   </bullet>
 

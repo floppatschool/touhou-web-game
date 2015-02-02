@@ -14,6 +14,18 @@ public class AyaMainBullet : BulletBase_Touhou {
         base.Update();
 	}
 
+    //void OnTriggerEnter2D(Collider2D otherCollider)
+    //{
+    //    Debug.Log(otherCollider.name);
+    //    PlaneBase plane = otherCollider.gameObject.GetComponent<PlaneBase>();
+    //    if (plane != null && renderer.sortingLayerName == "Enemy")
+    //    {
+    //        Debug.Log("22222");
+    //        plane.bHit();
+    //    }
+    //    Destroy(this.gameObject);
+    //}
+
     void FixedUpdate()
     {
         rigidbody2D.velocity = speed;

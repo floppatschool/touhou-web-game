@@ -352,11 +352,11 @@ public class SongDataEditor : Editor
 			EditorGUILayout.FloatField( "Time", 0 );
             EditorGUILayout.ColorField("DeadColor", Color.white);
             EditorGUILayout.Vector2Field("AppearPos", Vector2.zero);
-            EditorGUILayout.FloatField("AppearSpeed", 80);
-            EditorGUILayout.Vector2Field("AppearDir", Vector2.zero);
-            EditorGUILayout.CurveField("Speed_Curve", new AnimationCurve(new Keyframe(0, 0)));
-            EditorGUILayout.CurveField("SpeedDirX_Curve", new AnimationCurve(new Keyframe(0,0)));
-            EditorGUILayout.CurveField("SpeedDirY_Curve", new AnimationCurve(new Keyframe(0, 0)));
+            //EditorGUILayout.FloatField("AppearSpeed", 80);
+            EditorGUILayout.Vector2Field("AppearSpeed", Vector2.zero);
+            //EditorGUILayout.CurveField("Speed_Curve", new AnimationCurve(new Keyframe(0, 0)));
+            //EditorGUILayout.CurveField("SpeedDirX_Curve", new AnimationCurve(new Keyframe(0,0)));
+            //EditorGUILayout.CurveField("SpeedDirY_Curve", new AnimationCurve(new Keyframe(0, 0)));
 			EditorGUILayout.IntField( "String", 0 );
             EditorGUILayout.FloatField("EnemyCount", 1);
 
@@ -402,24 +402,24 @@ public class SongDataEditor : Editor
 			float newTime = EditorGUILayout.FloatField( "Time", SongPlayer.Song.Notes[ SelectedNote ].Time );
             Color deadColor = EditorGUILayout.ColorField("DeadColor", SongPlayer.Song.Notes[SelectedNote].StageColor);
             Vector2 appearPos = EditorGUILayout.Vector2Field("AppearPosRatio", SongPlayer.Song.Notes[SelectedNote].AppearPos);
-            float appearSpeed = EditorGUILayout.FloatField("AppearSpeed", SongPlayer.Song.Notes[SelectedNote].AppearSpeed);
-            Vector2 appearDir = EditorGUILayout.Vector2Field("AppearDir", SongPlayer.Song.Notes[SelectedNote].AppearDir);
+            //float appearSpeed = EditorGUILayout.FloatField("AppearSpeed", SongPlayer.Song.Notes[SelectedNote].AppearSpeed);
+            Vector2 appearSpeed = EditorGUILayout.Vector2Field("AppearSpeed", SongPlayer.Song.Notes[SelectedNote].AppearSpeed);
             
             
-            SongPlayer.Song.Notes[SelectedNote].Speed_Curve = EditorGUILayout.CurveField("Speed_Curve", SongPlayer.Song.Notes[SelectedNote].Speed_Curve);
+            //SongPlayer.Song.Notes[SelectedNote].Speed_Curve = EditorGUILayout.CurveField("Speed_Curve", SongPlayer.Song.Notes[SelectedNote].Speed_Curve);
 
 
             //AnimationCurve SpeedDirX_Curve = SongPlayer.Song.Notes[SelectedNote].DirX_Curve;
-            Keyframe xKey = new Keyframe(0, appearDir.x);
-            Keyframe yKey = new Keyframe(0, appearDir.y);
-            Keyframe[] newKeys_X = SongPlayer.Song.Notes[SelectedNote].DirX_Curve.keys;
-            Keyframe[] newKeys_Y = SongPlayer.Song.Notes[SelectedNote].DirY_Curve.keys;
-            newKeys_X[0] = xKey;
-            newKeys_Y[0] = yKey;
-            AnimationCurve SpeedDirX_Curve = new AnimationCurve(newKeys_X);
-            AnimationCurve SpeedDirY_Curve = new AnimationCurve(newKeys_Y);
-            SongPlayer.Song.Notes[SelectedNote].DirX_Curve = EditorGUILayout.CurveField("SpeedDirX_Curve", SpeedDirX_Curve);
-            SongPlayer.Song.Notes[SelectedNote].DirY_Curve = EditorGUILayout.CurveField("SpeedDirY_Curve", SpeedDirY_Curve);
+            //Keyframe xKey = new Keyframe(0, appearDir.x);
+            //Keyframe yKey = new Keyframe(0, appearDir.y);
+            //Keyframe[] newKeys_X = SongPlayer.Song.Notes[SelectedNote].DirX_Curve.keys;
+            //Keyframe[] newKeys_Y = SongPlayer.Song.Notes[SelectedNote].DirY_Curve.keys;
+            //newKeys_X[0] = xKey;
+            //newKeys_Y[0] = yKey;
+            //AnimationCurve SpeedDirX_Curve = new AnimationCurve(newKeys_X);
+            //AnimationCurve SpeedDirY_Curve = new AnimationCurve(newKeys_Y);
+            //SongPlayer.Song.Notes[SelectedNote].DirX_Curve = EditorGUILayout.CurveField("SpeedDirX_Curve", SpeedDirX_Curve);
+            //SongPlayer.Song.Notes[SelectedNote].DirY_Curve = EditorGUILayout.CurveField("SpeedDirY_Curve", SpeedDirY_Curve);
 
 			int newStringIndex = EditorGUILayout.IntField( "String", SongPlayer.Song.Notes[ SelectedNote ].StringIndex );
 			float newCount = EditorGUILayout.FloatField( "EnemyCount", SongPlayer.Song.Notes[ SelectedNote ].EnemyCount );
@@ -430,8 +430,8 @@ public class SongDataEditor : Editor
 			if( newTime != SongPlayer.Song.Notes[ SelectedNote ].Time
 				|| newStringIndex != SongPlayer.Song.Notes[ SelectedNote ].StringIndex
 				|| newCount != SongPlayer.Song.Notes[ SelectedNote ].EnemyCount
+                //|| appearSpeed != SongPlayer.Song.Notes[SelectedNote].AppearSpeed
                 || appearSpeed != SongPlayer.Song.Notes[SelectedNote].AppearSpeed
-                || appearDir != SongPlayer.Song.Notes[SelectedNote].AppearDir
                 || appearPos != SongPlayer.Song.Notes[SelectedNote].AppearPos
                 || EnemyType != SongPlayer.Song.Notes[SelectedNote].StageObjectType)
 			{
@@ -443,7 +443,7 @@ public class SongDataEditor : Editor
                 //SongPlayer.Song.Notes[SelectedNote].DeadColor = deadColor;
                 SongPlayer.Song.Notes[SelectedNote].AppearPos = appearPos;
                 SongPlayer.Song.Notes[SelectedNote].AppearSpeed = appearSpeed;
-                SongPlayer.Song.Notes[SelectedNote].AppearDir = appearDir;
+                //SongPlayer.Song.Notes[SelectedNote].AppearDir = appearDir;
 
                 SongPlayer.Song.Notes[SelectedNote].StageObjectType = EnemyType;
 

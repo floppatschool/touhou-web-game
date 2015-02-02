@@ -22,7 +22,7 @@ public class AlphaMoveTool : MonoBehaviour {
             //alpha渐变
             Color curColor = sp.color;
             float a = sp.color.a;
-            if (a > 0)
+            if (a > 0.03)
             {
                 a = Mathf.Lerp(a, 0, live * changeSpeed);
                 sp.color = new Color(curColor.r, curColor.g, curColor.b, a);

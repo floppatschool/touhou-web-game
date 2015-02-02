@@ -35,7 +35,7 @@ public class StageBase : MonoBehaviour{
             if (eb.activeTime < StageAudioManager.StageSongPlayer.GetCurrentBeat())
             {
                 eb.gameObject.SetActive(true);
-
+                
             }
             
         }
@@ -81,12 +81,12 @@ public class StageBase : MonoBehaviour{
         enemy.transform.position = Vector3.zero;
         EnemyBase enemyBase = enemy.GetComponent<EnemyBase>();
         //SetBaseEnemy(EnemyNoteList[i], enemyBase);
-        enemyBase.SetBaseName(name);
+        //enemyBase.SetBaseName(name);
         enemyBase.setDeadValue(null, color);
-        enemyBase.Speed_CurValue = speed;
-        enemyBase.Dir_CurSpeed = speedDir;
+        //enemyBase.Speed_CurValue = speed;
+        //enemyBase.Dir_CurSpeed = speedDir;
         enemyBase.activeTime = time - 1;
-        enemyBase.SetSpeedCurve(speedCurve, DirXCurve, DirYCurve);
+        //enemyBase.SetSpeedCurve(speedCurve, DirXCurve, DirYCurve);
         enemyBase.SetMainShooterBullet(bulletCount);
         enemy.gameObject.transform.position = orgPos;
         enemy.SetActive(false);
@@ -94,6 +94,52 @@ public class StageBase : MonoBehaviour{
             enemyBase.SetPlaneShootByRhythm(this);
         }
         
+        enemylist.Add(enemyBase);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name">名称</param>
+    /// <param name="AppearTime">出现时间点</param>
+    /// <param name="orgPos">出现位置</param>
+    /// <param name="color">颜色</param>
+    /// <param name="InTweenTime">进入屏幕到达目标位置的动画时间</param>
+    /// <param name="outTweenTime">出屏幕到达目标位置的动画时间</param>
+    /// <param name="waitTime">屏幕里等待时间</param>
+    /// <param name="InTargetPos">进入屏幕的目标位置</param>
+    /// <param name="OutTargetPos">出屏幕的目标位置</param>
+    /// <param name="isShootByRhythm">是否按照节奏射击</param>
+    /// <param name="bulletCount">子弹个数</param>
+    protected void CreateEnemy(string name, float AppearTime, Vector2 orgPos, Color color, float InTweenTime, float OutTweenTime,float waitTime,Vector3 InTargetPos,Vector3 OutTargetPos, bool isShootByRhythm, int bulletCount)
+    {
+        GameObject enemy = GameObject.Instantiate(Resources.Load(CommandString.EnemyPrefabPath + name)) as GameObject;
+        enemy.name = name + "_Num" + AppearTime;
+        enemy.transform.parent = Camera.main.gameObject.transform;
+        enemy.transform.localScale = Vector3.one;
+        enemy.transform.position = Vector3.zero;
+        
+        
+        EnemyBase enemyBase = enemy.GetComponent<EnemyBase>();
+        enemyBase.setDeadValue(null, color);
+        enemyBase.activeTime = AppearTime - 1;
+        enemyBase.SetMainShooterBullet(bulletCount);
+        enemy.gameObject.transform.position = orgPos;
+        if (enemyBase.enemyFsm != null)
+        {
+            enemyBase.enemyFsm.Fsm.Variables.FindFsmVector3("InPosition").Value = InTargetPos;
+            enemyBase.enemyFsm.Fsm.Variables.FindFsmVector3("OutPosition").Value = OutTargetPos;
+            enemyBase.enemyFsm.Fsm.Variables.FindFsmFloat("WaitTime").Value = waitTime;
+            enemyBase.enemyFsm.Fsm.Variables.FindFsmFloat("InTweenTime").Value = InTweenTime;
+            enemyBase.enemyFsm.Fsm.Variables.FindFsmFloat("OutTweenTime").Value = OutTweenTime;
+        }
+        enemy.SetActive(false);
+        
+        if (isShootByRhythm)
+        {
+            enemyBase.SetPlaneShootByRhythm(this);
+        }
+
         enemylist.Add(enemyBase);
     }
 

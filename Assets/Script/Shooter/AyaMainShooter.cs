@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Pixelnest.BulletML.Demo;
 
 public class AyaMainShooter : MonoBehaviour {
 
@@ -64,8 +63,9 @@ public class AyaMainShooter : MonoBehaviour {
     private void InitBullet()
     {
         GameObject shot = Instantiate(projectilePrefab) as GameObject;
-        shot.transform.position = this.transform.position;
+        
         shot.transform.parent = UIShootRoot.tra_ShootRoot;
+        shot.transform.position = this.transform.position;
         shot.transform.localScale = Vector3.one;
 
         BulletBase_Touhou shotScript = shot.GetComponent<BulletBase_Touhou>();

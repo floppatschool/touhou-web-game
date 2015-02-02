@@ -1,22 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Pixelnest.BulletML;
-using Pixelnest.BulletML.Demo;
 
 //[RequireComponent(typeof(UISpriteAnimation))]
 //[RequireComponent(typeof(UISprite))]
-[RequireComponent(typeof(CircleCollider2D))]
-[RequireComponent(typeof(BulletSourceScript))]
+[RequireComponent(typeof(Collider2D))]
 public class EnemyBase : PlaneBase {
 
     private string str_HitSound = "se_damage01";
     private string str_DeadSound = "se_enep00";
     private AudioClip hitSound;
     public float activeTime = -1;//敌人出现在屏幕里的时间
+    public PlayMakerFSM enemyFsm;//敌人身上的状态机
+    private Vector3 curTargetPos;
     //public Vector2 activePos = Vector2.zero;//敌人行动时开始的地点
-    private AnimationCurve speed_Curve;
-    private AnimationCurve DirX_Curve;
-    private AnimationCurve DirY_Curve;
+    //private AnimationCurve speed_Curve;
+    //private AnimationCurve DirX_Curve;
+    //private AnimationCurve DirY_Curve;
     float BornSpeed;//出生时的速度
     
     Vector2 BornSpeedDir;
@@ -28,14 +27,21 @@ public class EnemyBase : PlaneBase {
         
     }
 
+    void Awake() {
+        enemyFsm = gameObject.GetComponent<PlayMakerFSM>();    
+    }
 	// Use this for initialization
 	public override void Start () {
         base.Start();
-        BornSpeed = Speed_CurValue;
-        BornSpeedDir = Dir_CurSpeed;
+        //BornSpeed = Speed_CurValue;
+        //BornSpeedDir = Dir_CurSpeed;
         //animatePlayer.isNeedMirror = true;
         //mainShooter.setBulletSortingLayer(CommandString.EnemyBulletLayer);//敌人射出来的子弹层
         //mainShooter.setBulletSortingLayer("EnemyBullet");//敌人射出来的子弹层
+        if (enemyFsm != null)
+        {
+            enemyFsm.Fsm.Event("MoveIn");
+        }
         hitSound = Resources.Load(CommandString.SoundPath + str_HitSound) as AudioClip;
         deadSound = Resources.Load(CommandString.SoundPath + str_DeadSound) as AudioClip;
         hitEnable = true;
@@ -45,24 +51,28 @@ public class EnemyBase : PlaneBase {
         //StageManager.enemylist.Add(this);
 	}
 
+    //设置当前要移动到的目标位置  这个方法由playmaker事件来调用
+    public void setCurTargetPos(Vector3 targetPos) {
+        curTargetPos = targetPos;
+    }
     /// <summary>
     /// 设置速度曲线
     /// </summary>
     /// <param name="speed"></param>
     /// <param name="dir_x"></param>
     /// <param name="dir_y"></param>
-    public void SetSpeedCurve(AnimationCurve speed,AnimationCurve dir_x,AnimationCurve dir_y) {
-        if (speed != null) {
-            speed_Curve = speed;
-        }
-        if (dir_x != null) {
-            DirX_Curve = dir_x;
-        }
-        if (dir_y != null) {
-            DirY_Curve = dir_y;
-        }
+    //public void SetSpeedCurve(AnimationCurve speed,AnimationCurve dir_x,AnimationCurve dir_y) {
+        //if (speed != null) {
+        //    speed_Curve = speed;
+        //}
+        //if (dir_x != null) {
+        //    DirX_Curve = dir_x;
+        //}
+        //if (dir_y != null) {
+        //    DirY_Curve = dir_y;
+        //}
         
-    }
+    //}
 
     //根据节奏射击
     public void SetPlaneShootByRhythm(StageBase stage)
@@ -80,19 +90,19 @@ public class EnemyBase : PlaneBase {
         stage.StageBulletRhythmEvent -= PlaneShoot;
     }
 
-    private void UpdateSpeedByCurve() {
+    private void UpdateAnimateByDir() {
         
-        Speed_CurValue = BornSpeed * speed_Curve.Evaluate(LifeTime);
-        Dir_CurSpeed.x = DirX_Curve.Evaluate(LifeTime);
-        Dir_CurSpeed.y = DirY_Curve.Evaluate(LifeTime);
+        //Speed_CurValue = BornSpeed * speed_Curve.Evaluate(LifeTime);
+        //Dir_CurSpeed.x = DirX_Curve.Evaluate(LifeTime);
+        //Dir_CurSpeed.y = DirY_Curve.Evaluate(LifeTime);
 
-        if (Dir_CurSpeed.x > 0)
+        if (curTargetPos.x> transform.position.x)
         {
             
             PlayerAnimationStatus.SetBool("Right", true);
             //animatePlayer.setSpriteState(PlaneState.Right);
         }
-        else if (Dir_CurSpeed.x < 0)
+        else if (curTargetPos.x < transform.position.x)
         {
             PlayerAnimationStatus.SetBool("Left", true);
             //animatePlayer.setSpriteState(PlaneState.Left);
@@ -115,7 +125,8 @@ public class EnemyBase : PlaneBase {
     public void SetAppear(float appearTime, Vector2 appearPos,float appearSpeed,Vector2 appearDir)
     {
             Speed_CurValue = appearSpeed;
-            Dir_CurSpeed = appearDir;
+            rigidbody2d.velocity.Set(appearDir.x * appearSpeed,appearDir.y*appearSpeed);
+            //Dir_CurSpeed = appearDir;
             activeTime = appearTime;
             gameObject.transform.position = appearPos;
     }
@@ -135,21 +146,21 @@ public class EnemyBase : PlaneBase {
     /// 检测是否与子弹碰撞了
     /// </summary>
     /// <param name="otherCollider"></param>
-    void OnTriggerEnter2D(Collider2D otherCollider)
-    {
-        BulletBase_Touhou bullet = otherCollider.GetComponent<BulletBase_Touhou>();
-        if (bullet != null && bullet.renderer.sortingLayerName == CommandString.MyBulletLayer)
-        {
-            Destroy(bullet.gameObject);
-            HpValue -= bullet.Power;
-            if (HpValue <= 0)
-            {
-                Dead();
-            }
-            StageManager.CurStage.myPlane.Score += 100;
-            PlayHitSound();
-        }
-    }
+    //void OnTriggerEnter2D(Collider2D otherCollider)
+    //{
+    //    BulletBase_Touhou bullet = otherCollider.GetComponent<BulletBase_Touhou>();
+    //    if (bullet != null && bullet.renderer.sortingLayerName == CommandString.MyBulletLayer)
+    //    {
+    //        Destroy(bullet.gameObject);
+    //        HpValue -= bullet.Power;
+    //        if (HpValue <= 0)
+    //        {
+    //            Dead();
+    //        }
+    //        StageManager.CurStage.myPlane.Score += 100;
+    //        PlayHitSound();
+    //    }
+    //}
 
     public void HitCheckAll()
     {
@@ -200,31 +211,43 @@ public class EnemyBase : PlaneBase {
 
     
 
-    //被打中伤血
-    public virtual void bHit()
+    //
+    /// <summary>
+    /// 被打中伤血
+    /// </summary>
+    /// <param name="hitPower">被打中的子弹威力</param>
+    public override void bHit(float hitPower)
     {
+
         if (hitEnable)
         {
-            for (int i = hitObjectList.Count - 1; i >= 0; i--)
+            HpValue -= hitPower;
+            if (HpValue <= 0)
             {
-                BulletBase_Touhou bullet = hitObjectList[i].GetComponent<BulletBase_Touhou>();
-                if (bullet != null && bullet.renderer.sortingLayerName == CommandString.MyBulletLayer)
-                {
-                    HpValue -= bullet.Power;
-                    if (HpValue <= 0)
-                    {
-                        Dead();
-                    }
-                    StageManager.CurStage.myPlane.Score += 100;
-                    PlayHitSound();
-                    //GameObject obj_Bullet = hitObjectList[i].gameObject;
-                    GameObject.Destroy(hitObjectList[i]);
-                    hitObjectList.RemoveAt(i);
-                }
-                else {
-                    hitObjectList.RemoveAt(i);
-                }
+                Dead();
             }
+            StageManager.CurStage.myPlane.Score += 100;
+            PlayHitSound();
+            //for (int i = hitObjectList.Count - 1; i >= 0; i--)
+            //{
+            //    BulletBase_Touhou bullet = hitObjectList[i].GetComponent<BulletBase_Touhou>();
+            //    if (bullet != null && bullet.renderer.sortingLayerName == CommandString.MyBulletLayer)
+            //    {
+            //        HpValue -= bullet.Power;
+            //        if (HpValue <= 0)
+            //        {
+            //            Dead();
+            //        }
+            //        StageManager.CurStage.myPlane.Score += 100;
+            //        PlayHitSound();
+            //        //GameObject obj_Bullet = hitObjectList[i].gameObject;
+            //        GameObject.Destroy(hitObjectList[i]);
+            //        hitObjectList.RemoveAt(i);
+            //    }
+            //    else {
+            //        hitObjectList.RemoveAt(i);
+            //    }
+            //}
             
         }
     }
@@ -232,10 +255,11 @@ public class EnemyBase : PlaneBase {
    
 
 	// Update is called once per frame
-	public virtual void Update () {
-        //base.Update();
+    public override void Update()
+    {
+        base.Update();
         //bHit();
         //checkCanShoot();
-        //UpdateSpeedByCurve();
-	}
+        UpdateAnimateByDir();
+    }
 }

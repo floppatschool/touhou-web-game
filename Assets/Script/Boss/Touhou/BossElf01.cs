@@ -18,7 +18,7 @@ public class BossElf01 : BossBase {
 
             BossShooterList[i].CanShootBulletCount = 5;
         }
-        mainShooter = BossShooterList[ShooterIndex];
+        //mainShooter = BossShooterList[ShooterIndex];
         SetMainShooterBullet(5, 0, 0, 0);
     }
 
@@ -32,12 +32,12 @@ public class BossElf01 : BossBase {
     void Update()
     {
         base.Update();
-        if (mainShooter.CanShootBulletCount <= 0) {  //这个波效果的子弹打完换下一波子弹
-            if (ShooterIndex < BossShooterList.Count -1) {
-                ShooterIndex++;
-                InitBossShooters();
-            }
+        //if (mainShooter.CanShootBulletCount <= 0) {  //这个波效果的子弹打完换下一波子弹
+        //    if (ShooterIndex < BossShooterList.Count -1) {
+        //        ShooterIndex++;
+        //        InitBossShooters();
+        //    }
             
-        }
+        //}
     }
 }

@@ -66,11 +66,11 @@ public class ShooterBase : ObjectBase {
     public float shootBulletSpeed = 250;//默认敌人子弹速度
 
 	// Use this for initialization
-    public override void Start()
-    {
-        base.Start();
-        Init();
-    }
+    //public override void Start()
+    //{
+    //    //base.Start();
+    //    Init();
+    //}
 
     //初始化
     void Init() {

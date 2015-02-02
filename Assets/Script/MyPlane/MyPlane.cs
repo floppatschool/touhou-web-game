@@ -400,6 +400,7 @@ public class MyPlane : PlaneBase
         grazeSound = Resources.Load(grazeSoundPath) as AudioClip;
         weaponType = WeaponType.TypeA;
         SpellEnabled = true;
+        Speed_CurValue = speedNormal;
         //subShooterList = MySubShooterList;
         //mainShooter.SetShootBulletSpeed(mainBulletShootSpeed);
         SetMainShooterBullet(-1);
@@ -463,7 +464,7 @@ public class MyPlane : PlaneBase
         if (isCanMove)
         {
 
-            Rect myRect = render.sprite.textureRect;
+            //Rect myRect = render.sprite.textureRect;
             float x = gameObject.transform.position.x;
             float y = gameObject.transform.position.y;
             if (Input.GetButton("Left"))
@@ -473,7 +474,6 @@ public class MyPlane : PlaneBase
                 //setState(PlaneState.Left);
                 if (x > GlobalData.screenLeftPoint.x)
                 {
-
                     x -= Speed_CurValue;
                 }
 
@@ -500,6 +500,7 @@ public class MyPlane : PlaneBase
             {
                 if (y < GlobalData.screenTopPoint.y)
                 {
+                    //rigidbody2d.velocity.Set(rigidbody2d.velocity.x,Speed_CurValue);
                     y += Speed_CurValue;
                 }
 
@@ -508,6 +509,7 @@ public class MyPlane : PlaneBase
             {
                 if (y > GlobalData.screenBottomPoint.y)
                 {
+                    //rigidbody2d.velocity.Set(rigidbody2d.velocity.x, -Speed_CurValue);
                     y -= Speed_CurValue;
                 }
 
@@ -661,41 +663,51 @@ public class MyPlane : PlaneBase
     }
 
     //被打中伤血
-    public virtual void bHit()
+    public override void bHit(float hitPower)
     {
         if (hitEnable)
         {
-            for (int i = hitObjectList.Count - 1; i >= 0; i--)
+            HpValue -= hitPower;
+            if (HpValue <= 0)
             {
-                BulletBase_Touhou bullet = hitObjectList[i].GetComponent<BulletBase_Touhou>();
-                if (bullet != null && bullet.renderer.sortingLayerName == CommandString.EnemyBulletLayer)
-                {
-                    HpValue -= bullet.Power;
-                    if (HpValue <= 0)
-                    {
-                        Dead();
-                        ClearAllBullet();
-                        break;
-                    }
-                    GameObject obj_Bullet = hitObjectList[i].gameObject;
-                    GameObject.Destroy(obj_Bullet);
-                    hitObjectList.RemoveAt(i);
-                }
-                else
-                {
-                    hitObjectList.RemoveAt(i);
-                }
+                Dead();
+                ClearAllBullet();
             }
+
+            //for (int i = hitObjectList.Count - 1; i >= 0; i--)
+            //{
+            //    BulletBase_Touhou bullet = hitObjectList[i].GetComponent<BulletBase_Touhou>();
+            //    if (bullet != null && bullet.renderer.sortingLayerName == CommandString.EnemyBulletLayer)
+            //    {
+            //        HpValue -= bullet.Power;
+            //        if (HpValue <= 0)
+            //        {
+            //            Dead();
+            //            ClearAllBullet();
+            //            break;
+            //        }
+            //        GameObject obj_Bullet = hitObjectList[i].gameObject;
+            //        GameObject.Destroy(obj_Bullet);
+            //        hitObjectList.RemoveAt(i);
+            //    }
+            //    else
+            //    {
+            //        hitObjectList.RemoveAt(i);
+            //    }
+            //}
         }
     }
 
     //死亡以后清除所有屏幕上的弹幕 并且播放清除特效
     private void ClearAllBullet()
     {
-        BulletBase_Touhou[] bulletInScreen = UIShootRoot.tra_ShootRoot.GetComponentsInChildren<BulletBase_Touhou>();
-        foreach (BulletBase_Touhou bullet in bulletInScreen)
+        GameObject[] bulletInScreen = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        //BulletBase_Touhou[] bulletInScreen = UIShootRoot.tra_ShootRoot.GetComponentsInChildren<BulletBase_Touhou>();
+        foreach (GameObject go in bulletInScreen)
         {
-            GameObject.Destroy(bullet.gameObject);
+            BulletBase_Touhou bullet = go.GetComponent<BulletBase_Touhou>();
+            bullet.ShowVanishEffect();
+            GameObject.Destroy(go);
         }
     }
 
@@ -706,6 +718,6 @@ public class MyPlane : PlaneBase
         InputControl();
         UpdateSubPlanePos(PowerLevel);
         //GrazeBullet();
-        bHit();
+        //bHit();
     }
 }

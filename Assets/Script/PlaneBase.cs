@@ -11,10 +11,9 @@ public class PlaneBase : ObjectBase {
     public bool isCanShoot = true;//是否能发射子弹
     protected bool isShooting = false;//是否在发射子弹状态
     public bool isDead = false;//是否死亡
-    protected SpriteAnimation animatePlayer;//机体动画
-    protected Animator PlayerAnimationStatus; //机体动画
-    public ShooterBase mainShooter;//每个机体至少有一个主要弹幕发射器
-    protected List<ShooterBase> subShooterList = new List<ShooterBase>();//子发射器列表
+    protected Animator PlayerAnimationStatus; //每个飞机都有机体动画
+    //public ShooterBase mainShooter;//每个机体至少有一个主要弹幕发射器
+    //protected List<ShooterBase> subShooterList = new List<ShooterBase>();//子发射器列表
     protected float HpValue = 50;//每个飞机有血量
     protected AudioSource baseAudio;//每个飞机自身都带的音频播放设备，用来播放各种自己飞机受到的声音
     public AudioClip deadSound;//每个飞机的死亡声音
@@ -24,6 +23,7 @@ public class PlaneBase : ObjectBase {
     //protected List<ItemBase> ItemList = new List<ItemBase>();//拥有的道具列表
     protected List<string> ItemNameList = new List<string>();//拥有的道具列表
     protected bool isShootByRhythm = false;//是否按照节奏射击
+    protected Rigidbody2D rigidbody2d;//飞机物理刚体
 
     public enum PlaneState
     {
@@ -35,13 +35,14 @@ public class PlaneBase : ObjectBase {
     public PlaneState enum_State = PlaneState.NoMove;//角色移动状态
 
 	// Use this for initialization
-	public override void Start () {
-        base.Start();
+	public virtual void Start () {
+        //base.Start();
         //animatePlayer = gameObject.GetComponent<SpriteAnimation>();
         PlayerAnimationStatus = this.GetComponent<Animator>(); //获取机体移动动画
         baseAudio = gameObject.GetComponent<AudioSource>();
         baseAudio.panLevel = 0;
         baseAudio.volume = 0.8f;
+        rigidbody2d = gameObject.GetComponent<Rigidbody2D>();
         //mainShooter.CanShootBulletCount = OwnBulletCount;
 	}
 
@@ -54,8 +55,8 @@ public class PlaneBase : ObjectBase {
     public void SetMainShooterBullet(int BulletCount, float shootRate, float shootSpace, float ShootDuration)
     {
         OwnBulletCount = BulletCount;
-        mainShooter.CanShootBulletCount = BulletCount;
-        mainShooter.shootRate = shootRate;
+        //mainShooter.CanShootBulletCount = BulletCount;
+        //mainShooter.shootRate = shootRate;
         //mainShooter.shootSpace = shootSpace;
         //mainShooter.shootDuration = ShootDuration;
     }
@@ -69,12 +70,12 @@ public class PlaneBase : ObjectBase {
 
     //设置子自发射器
     protected void SetSubShooterBullet(int BulletCount) {
-        foreach (ShooterBase sb in subShooterList) {
-            sb.CanShootBulletCount = BulletCount;
-        }
+        //foreach (ShooterBase sb in subShooterList) {
+        //    sb.CanShootBulletCount = BulletCount;
+        //}
     }
     //被打中伤血 用于继承的子类用
-    public virtual void bHit()
+    public virtual void bHit(float hitPower)
     {
     }
 
@@ -88,9 +89,9 @@ public class PlaneBase : ObjectBase {
 
     }
 
-    //用于处理飞机死亡特效
+    //用于处理飞机死亡特效  这里用playmaker实现
     protected void Dead() {
-        GameObject deadEffect =GameObject.Instantiate( Resources.Load(CommandString.EffectPath + deadEffectName)) as GameObject;
+        GameObject deadEffect =GameObject.Instantiate( Resources.Load(CommandString.EffectPath + deadEffectName)) as GameObject; //创建一个死亡特效
         ParticleSystem ps = deadEffect.GetComponent<ParticleSystem>();
         ps.startColor = deadColor;
         deadEffect.transform.parent = UIShootRoot.tra_ShootRoot;
@@ -112,7 +113,6 @@ public class PlaneBase : ObjectBase {
     //给道具
     protected void GiveItems()
     {
-        Debug.Log("ItemNameList.Count = " + ItemNameList.Count);
         for (int i = 0; i < ItemNameList.Count; i++) {
             GameObject Item_Obj = GameObject.Instantiate(Resources.Load(CommandString.ItemPath + ItemNameList[i])) as GameObject;
             Item_Obj.name = "Item" + gameObject.name;
@@ -159,19 +159,20 @@ public class PlaneBase : ObjectBase {
     protected void PlaneShoot() {
         if (CheckInScreen())
         {
-            if (isCanShoot && isShooting && mainShooter != null)
-            {
-                mainShooter.Shoot();
-            }
+            //if (isCanShoot && isShooting && mainShooter != null)
+            //{
+            //    mainShooter.Shoot();
+            //}
         }
     }
 
 
 
 	// Update is called once per frame
-    public override void Update()
+    public virtual void Update()
     {
-        base.Update();
+        LifeTime += Time.deltaTime;
+        //base.Update();
         if (!isShootByRhythm)
         {
             PlaneShoot();

@@ -70,8 +70,9 @@ public class Note
 	public float Time;
     public Color StageColor = CommandString.EnemyRedColor;//关卡默认红色
     public Vector2 AppearPos = Vector2.zero;//出现时的位置屏幕左上为0,0坐标
-    public float AppearSpeed = 80;//出现时的速度
-    public Vector2 AppearDir = -Vector2.up;//出现时的方向，默认为向下
+    //public float AppearSpeed = 80;//出现时的速度
+    public Vector2 AppearSpeed = -Vector2.up;//出现时的方向，默认为向下,数值为1
+    public float tweenTime = 1;//速度变换时间
     public int StringIndex;
     public AnimationCurve Speed_Curve = new AnimationCurve(SpeedMinKey, SpeedMidKey1, SpeedMidKey2, SpeedMaxKey);//速度值曲线
     public AnimationCurve DirX_Curve = new AnimationCurve(DirXMinKey, DirXMaxKey); //x速度方向动画曲线
