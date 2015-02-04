@@ -143,6 +143,47 @@ public class StageBase : MonoBehaviour{
         enemylist.Add(enemyBase);
     }
 
+
+    /// <summary>
+    /// 创建一个boss
+    /// </summary>
+    /// <param name="name">名称</param>
+    /// <param name="AppearTime">出现时间点</param>
+    /// <param name="orgPos">出现位置</param>
+    /// <param name="color">颜色</param>
+    /// <param name="InTweenTime">进入屏幕到达目标位置的动画时间</param>
+    /// <param name="waitTime">每次转换位置的时间间隔</param>
+    /// <param name="InTargetPos">进入屏幕的目标位置</param>
+    /// <param name="isShootByRhythm">是否按照节奏射击</param>
+    protected void CreateBoss(string name, float AppearTime, Vector2 orgPos, Color color, float InTweenTime, float waitTime,Vector3 InTargetPos, bool isShootByRhythm)
+    {
+        GameObject enemy = GameObject.Instantiate(Resources.Load(CommandString.EnemyPrefabPath + name)) as GameObject;
+        enemy.name = name + "_Num" + AppearTime;
+        enemy.transform.parent = Camera.main.gameObject.transform;
+        enemy.transform.localScale = Vector3.one;
+        enemy.transform.position = Vector3.zero;
+        
+        EnemyBase enemyBase = enemy.GetComponent<EnemyBase>();
+        enemyBase.setDeadValue(null, color);
+        enemyBase.activeTime = AppearTime - 1;
+        //enemyBase.SetMainShooterBullet(bulletCount);
+        enemy.gameObject.transform.position = orgPos;
+        if (enemyBase.enemyFsm != null)
+        {
+            enemyBase.enemyFsm.Fsm.Variables.FindFsmVector3("InPosition").Value = InTargetPos;
+            enemyBase.enemyFsm.Fsm.Variables.FindFsmFloat("WaitTime").Value = waitTime;
+            enemyBase.enemyFsm.Fsm.Variables.FindFsmFloat("InTweenTime").Value = InTweenTime;
+        }
+        enemy.SetActive(false);
+
+        if (isShootByRhythm)
+        {
+            enemyBase.SetPlaneShootByRhythm(this);
+        }
+
+        enemylist.Add(enemyBase);
+    }
+
     protected void UpdateItemInScreen() {
         //foreach (ItemBase item in itemList) {
         //    if (item.gameObject.transform.position.y < GlobalData.screenBottomPoint.y) {

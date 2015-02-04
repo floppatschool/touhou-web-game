@@ -23,19 +23,18 @@ public class Stage1 : StageBase {
             float time = EnemyNoteList[i].Time;
             Color appearColor = EnemyNoteList[i].StageColor;
             //float appearSpeed = EnemyNoteList[i].AppearSpeed;
-            float appearSpeed = 120;
+            //float appearSpeed = 120;
             //Vector2 appearDir = EnemyNoteList[i].AppearDir;
             float clipScreen = 15;
             float inTweenTime = 1;//进入屏幕要用的时间
             float outTweenTime = 4;//出屏幕要的时间
             Vector3 inPosition = Vector3.zero;//进入屏幕的位置
             Vector3 outPosition = Vector3.zero;//出屏幕的位置
-            float outWaitTime = 5;
+            float WaitTime = 5;//到达位置要等待的时间
                 //第一波敌人 前12个
                 if (i < 12)
                 {
                     int index = i;
-                    float offY = 0.1f;
                     if (EnemyNoteList[i].StageObjectType == Note.ObjectType.EnemyA0)
                     { //红色敌人 从左边开始一次向右排开 离开的时候向右下
                         Vector2 appearPos = Vector2.zero;
@@ -43,7 +42,7 @@ public class Stage1 : StageBase {
                         appearPos.y = GlobalData.ScreenZeroPoint.y;//通过屏幕百分比来得到y出现的坐标
                         inPosition = new Vector3(appearPos.x, appearPos.y - 1 - index / 2 * 0.1f, 0);
                         outPosition = new Vector3(GlobalData.screenRightPoint.x + 1, GlobalData.screenBottomPoint.y, 0);
-                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime,outWaitTime, inPosition, outPosition, false, 10);
+                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime,WaitTime, inPosition, outPosition, false, 10);
                     }
                     else if (EnemyNoteList[i].StageObjectType == Note.ObjectType.EnemyA1)
                     {//蓝色敌人  右边开始一次向左排开  离开的时候向左下
@@ -53,7 +52,7 @@ public class Stage1 : StageBase {
                         appearPos.y = GlobalData.ScreenZeroPoint.y;//通过屏幕百分比来得到y出现的坐标
                         inPosition = new Vector3(appearPos.x, appearPos.y - 1 - index/2*0.1f, 0);
                         outPosition = new Vector3(GlobalData.screenLeftPoint.x - 1, GlobalData.screenBottomPoint.y, 0);
-                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime,outWaitTime, inPosition, outPosition, false, 10);
+                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime,WaitTime, inPosition, outPosition, false, 10);
                     }
                 }
                 else if (i < 24)
@@ -70,7 +69,7 @@ public class Stage1 : StageBase {
                         //CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, appearDir, speedCurve, dirxCurve, EnemyNoteList[i].DirY_Curve, false, 10);
                         inPosition = new Vector3(appearPos.x, appearPos.y - 1 - index / 2 * 0.1f, 0);
                         outPosition = new Vector3(GlobalData.screenRightPoint.x + 1, GlobalData.screenBottomPoint.y, 0);
-                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime, outWaitTime, inPosition, outPosition, false, 10);
+                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime, WaitTime, inPosition, outPosition, false, 10);
                     }
                     if (EnemyNoteList[i].StageObjectType == Note.ObjectType.EnemyA3)
                     { //黄色敌人  从中间向右边排开，向左边退出
@@ -81,7 +80,7 @@ public class Stage1 : StageBase {
                         appearPos.y = GlobalData.ScreenZeroPoint.y;//通过屏幕百分比来得到y出现的坐标
                         inPosition = new Vector3(appearPos.x, appearPos.y - 1 - index / 2 * 0.1f, 0);
                         outPosition = new Vector3(GlobalData.screenLeftPoint.x - 1, GlobalData.screenBottomPoint.y, 0);
-                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime, outWaitTime, inPosition, outPosition, false, 10);
+                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime, WaitTime, inPosition, outPosition, false, 10);
                         //CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, appearDir, speedCurve, dirxCurve, EnemyNoteList[i].DirY_Curve, false, 10);
                     }
                 }
@@ -91,21 +90,27 @@ public class Stage1 : StageBase {
                     clipScreen = 20;
                     float offY = 0.1f;
                     if (EnemyNoteList[i].StageObjectType == Note.ObjectType.EnemyA2)
-                    { //绿色敌人
-                        AnimationCurve speedCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1.5f + index * offY, 0), new Keyframe(5, 0), new Keyframe(6, 1));
-                        AnimationCurve dirxCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(5, 0), new Keyframe(5, 1));
+                    { //绿色敌人 从屏幕中间出来向左边排开 向右边退出
+                        //AnimationCurve speedCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1.5f + index * offY, 0), new Keyframe(5, 0), new Keyframe(6, 1));
+                        //AnimationCurve dirxCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(5, 0), new Keyframe(5, 1));
                         Vector2 appearPos = Vector2.zero;
                         appearPos.x = GlobalData.ScreenZeroPoint.x + GlobalData.ScreenWidth / 2 - (index / 2f) / clipScreen * GlobalData.ScreenWidth;//通过屏幕百分比来得到x出现的坐标
                         appearPos.y = GlobalData.ScreenZeroPoint.y;//通过屏幕百分比来得到y出现的坐标
+                        inPosition = new Vector3(appearPos.x, appearPos.y - 1 - index / 2 * 0.1f, 0);
+                        outPosition = new Vector3(GlobalData.screenRightPoint.x + 1, GlobalData.screenBottomPoint.y, 0);
+                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime, WaitTime, inPosition, outPosition, false, 10);
                         //CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, appearDir, speedCurve, dirxCurve, EnemyNoteList[i].DirY_Curve, false, 10);
                     }
                     if (EnemyNoteList[i].StageObjectType == Note.ObjectType.EnemyA3)
-                    { //黄色敌人
-                        AnimationCurve speedCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1.5f + index * offY, 0), new Keyframe(5, 0), new Keyframe(6, 1));
-                        AnimationCurve dirxCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(5, 0), new Keyframe(5, -1));
+                    { //黄色敌人 屏幕中间出来向右边排开  向左边退出
+                        //AnimationCurve speedCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1.5f + index * offY, 0), new Keyframe(5, 0), new Keyframe(6, 1));
+                        //AnimationCurve dirxCurve = new AnimationCurve(new Keyframe(0, 0), new Keyframe(5, 0), new Keyframe(5, -1));
                         Vector2 appearPos = Vector2.zero;
                         appearPos.x = GlobalData.ScreenZeroPoint.x + GlobalData.ScreenWidth / 2 + (index / 2 + 1f) / clipScreen * GlobalData.ScreenWidth;//通过屏幕百分比来得到x出现的坐标
                         appearPos.y = GlobalData.ScreenZeroPoint.y;//通过屏幕百分比来得到y出现的坐标
+                        inPosition = new Vector3(appearPos.x, appearPos.y - 1 - index / 2 * 0.1f, 0);
+                        outPosition = new Vector3(GlobalData.screenLeftPoint.x - 1, GlobalData.screenBottomPoint.y, 0);
+                        CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime, WaitTime, inPosition, outPosition, false, 10);
                         //CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, appearDir, speedCurve, dirxCurve, EnemyNoteList[i].DirY_Curve, false, 10);
                     }
                     if (EnemyNoteList[i].StageObjectType == Note.ObjectType.EnemyA1) {
@@ -114,22 +119,24 @@ public class Stage1 : StageBase {
                             Vector2 appearPos = Vector2.zero;
                             appearPos.x = GlobalData.ScreenZeroPoint.x + (j+2) / clipScreen * GlobalData.ScreenWidth;//通过屏幕百分比来得到x出现的坐标
                             appearPos.y = GlobalData.ScreenZeroPoint.y;//通过屏幕百分比来得到y出现的坐标
+                            inPosition = new Vector3(appearPos.x, appearPos.y - 1 - index / 2 * 0.1f, 0);
+                            outPosition = new Vector3(appearPos.x, GlobalData.screenBottomPoint.y -1, 0);
+                            CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime, WaitTime, inPosition, outPosition, false, 10);
                             //CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, appearDir, EnemyNoteList[i].Speed_Curve, EnemyNoteList[i].DirX_Curve, EnemyNoteList[i].DirY_Curve, false, 10);
                         }
                     }
                 }
                 else if (i < 50) { 
-                    //第四波红色从右边出来
-                    float clipYScreen = 8f;
-                    AnimationCurve speedCurve = new AnimationCurve(new Keyframe(0,1));
-                    AnimationCurve dirxCurve = new AnimationCurve(new Keyframe(0, 1));
-                    AnimationCurve dirYCurve = new AnimationCurve(new Keyframe(0, 0));
-                    Vector2 newAppearDir = Vector2.right;
+                    //第四波红色从左边出来 向右边退出
+                    float clipYScreen = 8f; //屏幕高度分8份
                     Vector2 appearPos = Vector2.zero;
+                    WaitTime = 0;
                     appearPos.x = GlobalData.ScreenZeroPoint.x;//通过屏幕百分比来得到x出现的坐标
                     appearPos.y = GlobalData.ScreenZeroPoint.y - GlobalData.ScreenHeight/clipYScreen ;//通过屏幕百分比来得到y出现的坐标
-                    
-                    CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, newAppearDir, speedCurve, dirxCurve, dirYCurve,false,10);
+                    inPosition = new Vector3(appearPos.x+GlobalData.ScreenWidth + 1, appearPos.y, 0);
+                    outPosition = inPosition;
+                    CreateEnemy(enemyName, time, appearPos, appearColor, inTweenTime, outTweenTime, WaitTime, inPosition, outPosition, false, 10);
+                    //CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, newAppearDir, speedCurve, dirxCurve, dirYCurve,false,10);
                 }
                 else if (EnemyNoteList[i].StageObjectType == Note.ObjectType.BossElf01) { //道中bossElf01
                     //AnimationCurve speedCurve = new AnimationCurve(new Keyframe(0, 1));
@@ -140,7 +147,12 @@ public class Stage1 : StageBase {
                     appearPos.x = GlobalData.ScreenZeroPoint.x + GlobalData.ScreenWidth/2;//屏幕中间出来
                     appearPos.y = GlobalData.ScreenZeroPoint.y;
 
-                    CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, newAppearDir, EnemyNoteList[i].Speed_Curve, EnemyNoteList[i].DirX_Curve, EnemyNoteList[i].DirY_Curve, true,-1);
+                    inPosition = new Vector3(appearPos.x, appearPos.y - 1, 0);
+                    outPosition = Vector3.zero;
+                    inTweenTime = 1; //1秒内到位
+                    WaitTime = 1.5f;
+                    CreateBoss(enemyName, time, appearPos, appearColor, inTweenTime,WaitTime, inPosition, true);
+                    //CreateEnemy(enemyName, time, appearPos, appearColor, appearSpeed, newAppearDir, EnemyNoteList[i].Speed_Curve, EnemyNoteList[i].DirX_Curve, EnemyNoteList[i].DirY_Curve, true,-1);
                 }
         }
         EnemyNoteList.Clear();
